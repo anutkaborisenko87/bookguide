@@ -39,4 +39,15 @@ class AuthorRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByPartialName(string $name)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.first_name LIKE :name')
+            ->orWhere('a.last_name LIKE :name')
+            ->orWhere('a.patronomic_name LIKE :name')
+            ->setParameter('name', '%' . $name . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
 }

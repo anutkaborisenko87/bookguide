@@ -21,6 +21,7 @@ class Book
      */
     private $id;
 
+
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Назва є обов'язковою")

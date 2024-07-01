@@ -61,13 +61,6 @@ class Author
         return $this->first_name;
     }
 
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
     public function setFirstName(string $first_name): self
     {
         $this->first_name = $first_name;

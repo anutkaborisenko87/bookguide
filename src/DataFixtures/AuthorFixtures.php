@@ -6,7 +6,8 @@ use App\Entity\Author;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class AuthorFixtures extends Fixture
+class
+AuthorFixtures extends Fixture
 {
     final public function load(ObjectManager $manager): void
     {
