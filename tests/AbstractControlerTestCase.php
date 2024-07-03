@@ -12,7 +12,7 @@ use Helmich\JsonAssert\JsonAssertions;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AbstractControlerTest extends WebTestCase
+abstract class AbstractControlerTestCase extends WebTestCase
 {
     use JsonAssertions;
     protected KernelBrowser $client;

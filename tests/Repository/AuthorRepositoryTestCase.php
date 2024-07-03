@@ -5,19 +5,19 @@ namespace App\Tests\Repository;
 use App\Entity\Author;
 use App\Entity\Book;
 use App\Repository\AuthorRepository;
-use App\Tests\AbstractRepositoryTest;
+use App\Tests\AbstractRepositoryTestCase;
 use DateTime;
 
-class AuthorRepositoryTest extends AbstractRepositoryTest
+class AuthorRepositoryTestCase extends AbstractRepositoryTestCase
 {
     private AuthorRepository $authorRepository;
-    protected function setUp(): void
+    final protected function setUp(): void
     {
         parent::setUp();
         $this->authorRepository = $this->getRepositoryForEntity(Author::class);
     }
 
-    public function testFindByPartialName()
+    final public function testFindByPartialName(): void
     {
         $newAuthor = (new Author())->setFirstName('Ann')->setLastName('Test');
         $this->em->persist($newAuthor);
@@ -37,6 +37,13 @@ class AuthorRepositoryTest extends AbstractRepositoryTest
         }
 
         $this->assertEquals(5, $totalBooks);
+    }
+
+    final public function testAuthorNotFound(): void
+    {
+        $authors = $this->authorRepository->findByPartialName('NonExistingName');
+
+        $this->assertFalse(count($authors) > 0, "No authors should be found");
     }
 
     private function createBook(string $string, Author $author): Book

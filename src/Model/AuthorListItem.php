@@ -4,13 +4,13 @@ namespace App\Model;
 
 class AuthorListItem
 {
-    private int $id;
+    private ?int $id;
     private string $first_name;
     private string $last_name;
     private ?string $patronomic_name;
     private array $books;
 
-    public function __construct(int $id,
+    public function __construct(?int $id,
                                 string $first_name,
                                 string $last_name,
                                 ?string $patronomic_name = null,
@@ -29,7 +29,7 @@ class AuthorListItem
         return $this->books;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

@@ -7,7 +7,10 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Validation;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
@@ -35,11 +38,6 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\File(
-     *      maxSize="2M",
-     *      mimeTypes={"image/jpeg", "image/png"},
-     *      mimeTypesMessage="Будь ласка завантажте зображення у форматі jpg або png"
-     *  )
      */
     private $image;
 
@@ -52,7 +50,6 @@ class Book
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank(message="Дата опублікування є обов'язковою")
-     * @Assert\DateTime(message="Неправильний формат дати")
      */
     private $published_at;
 
@@ -61,7 +58,7 @@ class Book
         $this->authors = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -136,5 +133,32 @@ class Book
         $this->published_at = $published_at;
 
         return $this;
+    }
+    /**
+     * @Assert\Callback
+     */
+    public function validateImage(ExecutionContextInterface $context)
+    {
+        if (!$this->image instanceof UploadedFile && !is_string($this->image) && null !== $this->image) {
+            $context->buildViolation('Invalid image.')
+                ->atPath('image')
+                ->addViolation();
+        } elseif (!is_null($this->image) && $this->image instanceof UploadedFile) {
+            $validator = Validation::createValidator();
+            $violations = $validator->validate($this->image, [
+                new Assert\File([
+                    'maxSize' => '2M',
+                    'mimeTypes' => ['image/jpeg', 'image/png'],
+                    'mimeTypesMessage' => 'Будь ласка завантажте зображення у форматі jpg або png',
+                ]),
+            ]);
+
+            if ($violations->count() > 0) {
+                $violation = $violations[0];
+                $context->buildViolation($violation->getMessage())
+                    ->atPath('image')
+                    ->addViolation();
+            }
+        }
     }
 }

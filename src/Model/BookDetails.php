@@ -4,17 +4,17 @@ namespace App\Model;
 
 use DateTime;
 
-class BookListItem
+class BookDetails
 {
-    private int $id;
-    private string $title;
+    private ?int $id;
+    private ?string $title;
     private ?string $description;
     private ?string $image;
     private ?string $published_at;
     private array $authors;
 
-    public function __construct(int $id,
-                                string $title,
+    public function __construct(?int $id,
+                                ?string $title,
                                 ?string $description = null,
                                 ?string $image = null,
                                 ?DateTime $published_at = null,
@@ -34,12 +34,12 @@ class BookListItem
         return $this->authors;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }

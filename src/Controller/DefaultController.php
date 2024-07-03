@@ -16,6 +16,6 @@ class DefaultController extends AbstractController
      */
    final public function index(): Response
     {
-        return $this->json(['test' => 'hello']);
+        return $this->redirect('/api/doc');
     }
 }

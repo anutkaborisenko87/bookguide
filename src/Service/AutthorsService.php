@@ -4,17 +4,21 @@ namespace App\Service;
 
 use App\Entity\Author;
 use App\Entity\Book;
+use App\Exception\ValidationException;
 use App\Model\AuthorListItem;
 use App\Model\AuthorsBooksListItem;
 use App\Model\AuthorsListResponse;
 use App\Repository\AuthorRepository;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AutthorsService implements AuthorsServiceInterface
 {
-    private $authorRepository;
-    public function __construct(AuthorRepository $authorRepository)
+    private ValidatorInterface $validator;
+    private AuthorRepository $authorRepository;
+    public function __construct(AuthorRepository $authorRepository, ValidatorInterface $validator)
     {
         $this->authorRepository = $authorRepository;
+        $this->validator = $validator;
     }
 
     final public function getAuthors(int $page, ?int $limit = 10): AuthorsListResponse
@@ -42,5 +46,36 @@ class AutthorsService implements AuthorsServiceInterface
             );
         }, $authors);
         return new AuthorsListResponse($items, $page, $totalPages, $limit);
+    }
+
+    final public function createAuthor(
+        string $firstName,
+        string $lastName,
+        ?string $patronomicName = null
+    ): AuthorListItem
+    {
+        $author = new Author();
+        $author->setFirstName($firstName);
+        $author->setLastName($lastName);
+        if ($patronomicName) {
+            $author->setPatronomicName($patronomicName);
+        }
+        $errors = $this->validator->validate($author);
+
+        if (count($errors) > 0) {
+            $errorMessages = [];
+
+            foreach ($errors as $error) {
+                $errorMessages[$error->getPropertyPath()][] = $error->getMessage();
+            }
+            throw new ValidationException($errorMessages);
+        }
+        $this->authorRepository->add($author, true);
+            return new AuthorListItem(
+                $author->getId(),
+                $author->getFirstName(),
+                $author->getLastName(),
+                $author->getPatronomicName()
+            );
     }
 }

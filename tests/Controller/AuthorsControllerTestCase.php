@@ -2,21 +2,19 @@
 
 namespace App\Tests\Controller;
 
-use App\Tests\AbstractControlerTest;
+use App\Tests\AbstractControlerTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AuthorsControllerTest extends AbstractControlerTest
+class AuthorsControllerTestCase extends AbstractControlerTestCase
 {
 
     public function testIndex()
     {
         for ($i = 0; $i < 5; ++$i) {
             $author = $this->createAuthor($i);
-            if ($i == 1 || $i == 2) {
-                $book = $this->createBooks($i);
-                $author->addBook($book);
-                $this->em->persist($book);
-            }
+            $book = $this->createBooks($i);
+            $author->addBook($book);
+            $this->em->persist($book);
             $this->em->persist($author);
             $this->em->flush();
         }

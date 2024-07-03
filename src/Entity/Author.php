@@ -29,7 +29,7 @@ class Author
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $last_name;
+    private $patronomic_name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -39,7 +39,7 @@ class Author
      *        minMessage = "Прізвище має бути не коротшим ніж {{ limit }} символи"
      * )
      */
-    private $patronomic_name;
+    private $last_name;
 
     /**
      * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="authors")

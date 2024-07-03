@@ -33,7 +33,7 @@ class BookListResponse
     }
 
     /**
-     * @return AuthorListItem[]
+     * @return BookDetails[]
      */
     final public function getItems(): array
     {
